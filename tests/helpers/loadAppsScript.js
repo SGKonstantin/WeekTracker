@@ -19,7 +19,7 @@ function formatDate(date, timeZone, pattern) {
 function loadAppsScript(globals = {}) {
   const projectRoot = path.resolve(__dirname, '..', '..');
   const sourcePaths = ['Core.gs', 'Repository.gs', 'Code.gs', 'Setup.gs', 'Menu.gs']
-    .map(file => path.join(projectRoot, file));
+    .map(file => path.join(projectRoot, 'src', file));
   const context = vm.createContext({
     console,
     Date,

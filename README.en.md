@@ -1,4 +1,7 @@
-# WeekTracker
+# 📅 WeekTracker
+
+[![CI](https://github.com/SGKonstantin/WeekTracker/actions/workflows/ci.yml/badge.svg)](https://github.com/SGKonstantin/WeekTracker/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [Русская версия](README.md)
 
@@ -54,7 +57,7 @@ Choose a week, add tasks to day cards, edit their text, toggle completion, and r
 
 ## Development
 
-Local development, testing, and the standalone/clasp workflow are documented in the [developer guide](docs/DEVELOPMENT.md).
+Production source lives in `src/`. Local development, testing, and the standalone/clasp workflow are documented in the [developer guide](docs/DEVELOPMENT.md).
 
 ## Data & Privacy
 
@@ -66,7 +69,9 @@ After the repository is published, use GitHub Issues for bug reports and feature
 
 ## Contributing
 
-Focused pull requests are welcome. Run `npm run check`, update tests for behavior changes, and preserve the Core/Repository/Code boundaries. See [CONTRIBUTING.md](CONTRIBUTING.md) (Russian).
+Focused pull requests are welcome. Run `npm run check`, update tests for behavior changes, and preserve the Core/Repository/Code boundaries. See [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md) (Russian).
+
+For help and feedback, see [docs/SUPPORT.md](docs/SUPPORT.md) (Russian).
 
 ## Troubleshooting
 

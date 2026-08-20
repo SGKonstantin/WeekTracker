@@ -38,10 +38,10 @@ Pull Request не меняет основной проект автоматич�
 
 ## Архитектурные границы
 
-- Чистые business rules находятся в `Core.gs` без GAS API.
-- Google Sheets и Script Properties доступны через `Repository.gs`.
-- Публичный backend API и orchestration находятся в `Code.gs`.
-- Первоначальная схема создаётся в `Setup.gs`.
-- Google Sheets custom menu, launcher и работа с Web App URL находятся в `Menu.gs`.
+- Чистые business rules находятся в `src/Core.gs` без GAS API.
+- Google Sheets и Script Properties доступны через `src/Repository.gs`.
+- Публичный backend API и orchestration находятся в `src/Code.gs`.
+- Первоначальная схема создаётся в `src/Setup.gs`.
+- Google Sheets custom menu, launcher и работа с Web App URL находятся в `src/Menu.gs`.
 
 Перед Pull Request обязательно выполните `npm install` и `npm run check`.

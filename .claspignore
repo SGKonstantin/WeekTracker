@@ -1,4 +1,5 @@
+# .clasp.json uses "rootDir": "src", so paths are relative to src/.
 **/*
-!**/*.gs
-!**/*.html
+!*.gs
+!*.html
 !appsscript.json
