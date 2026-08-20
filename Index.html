@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{
+      --bg:#f6f2e9;--panel:#fffdf9;--line:#e5dccb;--line2:#eee7db;
+      --text:#28231c;--muted:#746c61;--gold:#b48743;--gold2:#d5ad6b;
+      --pale:#eee6d7;--green:#4d9451;--danger:#a25950;
+      --shadow:0 8px 24px rgba(70,55,30,.06)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1780px;margin:0 auto;padding:14px}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:5px;box-shadow:var(--shadow)}
+    .top{display:grid;grid-template-columns:290px 1fr;gap:16px;margin-bottom:14px}
+    .brand{min-height:238px;display:flex;flex-direction:column}
+    .brand-main{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}.brand-name{font-size:42px;font-weight:700;letter-spacing:-1px}.brand-subtitle{font-size:17px;font-weight:600;color:#8b714b;margin-top:8px}
+    .week-control{display:grid;grid-template-columns:96px 1fr;border-top:1px solid var(--line)}
+    .week-control label,.week-control input{padding:13px 10px;border:0;background:transparent}
+    .week-control label{font-size:13px;text-align:center;background:#f4eddd}
+    .week-control input{text-align:center;outline:none}
+    .week-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px;border-top:1px solid var(--line)}
+    .soft-btn{border:1px solid var(--line);background:#fbf7ef;border-radius:5px;padding:7px 8px;color:#604b2d}
+    .soft-btn:hover{background:#f3ead9}
+    .habits-title{display:flex;align-items:center;justify-content:center;gap:12px;padding:11px;font-weight:700;color:#6e4617;border-bottom:1px solid var(--line)}
+    .habits-title .add-inline{position:absolute;right:26px}
+    .habits-body{display:grid;grid-template-columns:1fr 280px;min-height:190px}
+    .habit-table{padding:0 14px 10px;overflow-x:auto}
+    .habit-head,.habit-row{display:grid;grid-template-columns:145px repeat(7,1fr) 76px 30px;align-items:center}
+    .habit-head{font-size:13px;text-align:center;padding:9px 0;border-bottom:1px solid var(--line2);min-width:760px}
+    .habit-row{min-height:46px;border-bottom:1px solid var(--line2);font-size:14px;min-width:760px}
+    .habit-name{font-weight:600}
+    .hcell{text-align:center}
+    .icon-btn{border:0;background:transparent;color:#9b8b75;padding:4px;border-radius:4px}
+    .icon-btn:hover{background:#f2ebe0;color:#57442b}
+    .danger:hover{color:var(--danger);background:#f8eae7}
+    .habits-summary{border-left:1px solid var(--line2);display:grid;grid-template-columns:150px 1fr;align-items:center;padding:15px}
+    .legend h3{margin:0 0 12px;font-size:14px}.legend-row{display:flex;justify-content:space-between;margin:10px 0;font-size:13px}
+    .days{display:grid;grid-template-columns:repeat(7,minmax(205px,1fr));gap:14px;align-items:stretch}
+    .day-card{overflow:hidden;display:flex;flex-direction:column;min-height:520px}
+    .day-head{text-align:center;background:#f5eddd;padding:9px 5px;border-bottom:1px solid var(--line)}
+    .day-name{font-weight:700;font-size:15px}.day-date{font-size:12px;margin-top:4px}
+    .progress-area{padding:14px 8px 10px;text-align:center}
+    .ring{--p:0;width:138px;height:138px;border-radius:50%;margin:0 auto;display:grid;place-items:center;background:conic-gradient(var(--gold) calc(var(--p)*1%),var(--pale) 0);position:relative}
+    .ring:after{content:"";position:absolute;width:96px;height:96px;border-radius:50%;background:var(--panel);box-shadow:inset 0 0 0 1px rgba(190,165,120,.13)}
+    .ring span{position:relative;z-index:1;font-size:25px;font-weight:700;color:#a57937}
+    .ring.small{width:132px;height:132px}.ring.small:after{width:90px;height:90px}
+    .progress-label{font-size:12px;margin-top:9px}
+    .section-title{text-align:center;background:#f6efe2;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;font-size:13px;font-weight:700}
+    .tasks{padding:8px 7px 4px;flex:1}
+    .task{display:grid;grid-template-columns:18px 1fr auto;gap:5px;align-items:start;padding:5px 0;font-size:12.5px;line-height:1.25}
+    input[type=checkbox]{width:15px;height:15px;accent-color:#3e9147;margin-top:1px}
+    .task-text{cursor:text;outline:none;border-bottom:1px solid transparent;min-height:16px}.task-text:focus{border-bottom-color:#c9b38d}
+    .task-actions{display:flex;opacity:.25;transition:.15s}
+    .task:hover .task-actions{opacity:1}
+    .task-actions button{font-size:12px;padding:1px 3px}
+    .add-task{margin:8px 7px 10px;border:1px dashed #ccb994;background:#fbf7ef;color:#7a5c2f;border-radius:5px;padding:7px}
+    .add-task:hover{background:#f4ebda}
+    .add-habit{width:100%;margin:10px 0 2px;border:1px dashed #ccb994;background:#fbf7ef;color:#7a5c2f;border-radius:5px;padding:9px}
+    .add-habit:hover{background:#f4ebda}
+    .count{text-align:center;padding:9px;border-top:1px solid var(--line);font-size:13px;background:#fbf7ef}
+    .bottom{display:grid;grid-template-columns:1.25fr .45fr;gap:14px;margin-top:18px}
+    .chart-panel{padding:12px 18px 14px}.chart-title{text-align:center;font-weight:700;color:#6e4617;margin-bottom:6px}
+    .bars{height:185px;display:flex;align-items:flex-end;gap:22px;padding:10px 22px 24px;border-bottom:1px solid #cfc4b3}
+    .bar-wrap{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:38px}
+    .bar{width:38px;background:linear-gradient(#d9b273,#b98b45);min-height:2px}
+    .bar-label{font-size:11px;margin-top:7px;text-align:center;white-space:nowrap}
+    .week-ring{display:flex;align-items:center;justify-content:center;flex-direction:column;padding:15px}
+    .small-note{font-size:12px;margin-top:7px}.check-disabled{color:#aaa}
+    .loading{position:fixed;inset:0;background:rgba(246,242,233,.82);display:grid;place-items:center;font-weight:700;z-index:50}
+    .hidden{display:none!important}
+    .error{position:fixed;right:16px;bottom:16px;background:#752f2f;color:#fff;padding:12px 16px;border-radius:6px;max-width:420px;z-index:80}
+    .save-status{position:fixed;right:16px;top:14px;z-index:80;background:rgba(255,253,249,.96);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;padding:7px 12px;font-size:12px;color:var(--muted);opacity:0;transform:translateY(-6px);pointer-events:none;transition:.18s ease}
+    .save-status.show{opacity:1;transform:translateY(0)}.save-status.ok{color:#477a4b}.save-status.err{color:#8c3d38}
+    .modal-wrap{position:fixed;inset:0;background:rgba(40,35,28,.28);display:grid;place-items:center;z-index:70;padding:16px}
+    .modal{width:min(520px,100%);background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 18px 50px rgba(60,45,25,.18);padding:20px}
+    .modal h3{margin:0 0 16px}.modal input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:5px;background:#fffdf9}
+    .day-picks{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:14px 0}
+    .day-pick{border:1px solid var(--line);border-radius:5px;padding:8px 3px;text-align:center}
+    .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+    .primary{background:#b48743;color:#fff;border-color:#a77b37}
+    .danger-btn{background:#9c554c;color:#fff;border-color:#8d4a42}
+    .danger-btn:hover{background:#88483f}
+    .modal-text{font-size:14px;line-height:1.45;color:var(--text);margin:4px 0 6px}
+    .modal-subtext{font-size:12.5px;line-height:1.45;color:var(--muted);margin-top:6px}
+    .modal-error{font-size:12px;color:#9c554c;margin-top:8px;min-height:15px}.empty-state{color:var(--muted);font-size:12px;text-align:center;padding:18px 8px}.habit-empty{color:var(--muted);font-size:13px;text-align:center;padding:16px 8px;border-bottom:1px solid var(--line2)}
+    @media(max-width:1350px){.days{grid-template-columns:repeat(4,1fr)}}
+    @media(max-width:900px){.top{grid-template-columns:1fr}.habits-body{grid-template-columns:1fr}.habits-summary{border-left:0;border-top:1px solid var(--line2)}.days{grid-template-columns:repeat(2,1fr)}.bottom{grid-template-columns:1fr}}
+    @media(max-width:560px){.app{padding:8px}.days{grid-template-columns:1fr}.brand-main{font-size:32px}.bars{gap:8px;padding-left:5px;padding-right:5px}.bar{width:26px}}
+  </style>
+</head>
+<body>
+<div id="loading" class="loading">Загрузка планера…</div>
+<div id="error" class="error hidden"></div>
+<div id="saveStatus" class="save-status">Сохранение…</div>
+
+<div class="app">
+  <section class="top">
+    <div class="panel brand">
+      <div class="brand-main"><div><div class="brand-name">WeekTracker</div><div class="brand-subtitle">Недельный планер</div></div></div>
+      <div class="week-control"><label>Начало недели</label><input id="weekStart" type="date"></div>
+      <div class="week-nav">
+        <button class="soft-btn" onclick="shiftWeek(-7)">← Неделя</button>
+        <button class="soft-btn" onclick="goCurrentWeek()">Сегодня</button>
+        <button class="soft-btn" onclick="shiftWeek(7)">Неделя →</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="habits-title">
+        <span>Ежедневные привычки</span>
+      </div>
+      <div class="habits-body">
+        <div class="habit-table">
+          <div id="habitHead" class="habit-head"></div>
+          <div id="habitRows"></div>
+          <button class="add-habit" onclick="openHabitModal()">＋ Добавить привычку</button>
+        </div>
+        <div class="habits-summary">
+          <div id="habitRing"></div>
+          <div class="legend">
+            <h3>Прогресс привычек</h3>
+            <div id="habitLegend"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="days" class="days"></section>
+
+  <section class="bottom">
+    <div class="panel chart-panel">
+      <div class="chart-title">Общий прогресс недели</div>
+      <div id="bars" class="bars"></div>
+    </div>
+    <div class="panel week-ring" id="weekRing"></div>
+  </section>
+</div>
+
+<div id="habitModal" class="modal-wrap hidden" onclick="if(event.target===this)closeHabitModal()">
+  <div class="modal">
+    <h3>Новая привычка</h3>
+    <input id="habitName" type="text" placeholder="Например: Чтение">
+    <div id="habitModalError" class="modal-error"></div>
+    <div style="margin-top:6px;font-size:13px;color:var(--muted)">В какие дни выполнять:</div>
+    <div class="day-picks">
+      <label class="day-pick">Пн<br><input class="habitDay" type="checkbox" checked></label>
+      <label class="day-pick">Вт<br><input class="habitDay" type="checkbox" checked></label>
+      <label class="day-pick">Ср<br><input class="habitDay" type="checkbox" checked></label>
+      <label class="day-pick">Чт<br><input class="habitDay" type="checkbox" checked></label>
+      <label class="day-pick">Пт<br><input class="habitDay" type="checkbox" checked></label>
+      <label class="day-pick">Сб<br><input class="habitDay" type="checkbox" checked></label>
+      <label class="day-pick">Вс<br><input class="habitDay" type="checkbox" checked></label>
+    </div>
+    <div class="modal-actions">
+      <button class="soft-btn" onclick="closeHabitModal()">Отмена</button>
+      <button class="soft-btn primary" onclick="submitHabit()">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<div id="taskModal" class="modal-wrap hidden" onclick="if(event.target===this)closeTaskModal()">
+  <div class="modal">
+    <h3 id="taskModalTitle">Новая задача</h3>
+    <input id="taskName" type="text" placeholder="Например: Подготовить отчёт">
+    <div id="taskModalError" class="modal-error"></div>
+    <div class="modal-actions">
+      <button class="soft-btn" onclick="closeTaskModal()">Отмена</button>
+      <button class="soft-btn primary" onclick="submitTask()">Добавить</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal-wrap hidden" onclick="if(event.target===this)closeConfirmModal()">
+  <div class="modal">
+    <h3 id="confirmTitle">Подтверждение</h3>
+    <div id="confirmText" class="modal-text"></div>
+    <div id="confirmSubtext" class="modal-subtext"></div>
+    <div class="modal-actions">
+      <button class="soft-btn" onclick="closeConfirmModal()">Отмена</button>
+      <button id="confirmButton" class="soft-btn danger-btn" onclick="submitConfirm()">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let state=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+function isIsoDate(iso){return /^\d{4}-\d{2}-\d{2}$/.test(String(iso||''))}
+function formatDate(iso,short=false){
+  if(!isIsoDate(iso)) return '—';
+  const[y,m,d]=iso.split('-');
+  return short?`${d}.${m}`:`${d}.${m}.${y}`;
+}
+function ring(p,cls=''){return `<div class="ring ${cls}" style="--p:${p}"><span>${p}%</span></div>`}
+function setLoading(v){$('#loading').classList.toggle('hidden',!v)}
+function fail(err){setLoading(false);const e=$('#error');e.textContent=err?.message||String(err);e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),5000)}
+
+let pendingSaves=0,saveTimer=null;
+function showSaveStatus(text='Сохранение…',type=''){
+  const el=$('#saveStatus');el.textContent=text;el.className='save-status show'+(type?' '+type:'');
+  clearTimeout(saveTimer);if(type==='ok')saveTimer=setTimeout(()=>el.classList.remove('show'),900)
+}
+function beginSave(){pendingSaves++;showSaveStatus('Сохранение…')}
+function endSave(){pendingSaves=Math.max(0,pendingSaves-1);if(pendingSaves===0)showSaveStatus('Сохранено','ok')}
+function silentSave(name,args=[],onError){
+  beginSave();
+  google.script.run.withFailureHandler(err=>{
+    pendingSaves=Math.max(0,pendingSaves-1);showSaveStatus('Ошибка сохранения','err');
+    if(onError)onError(err);fail(err)
+  }).withSuccessHandler(result=>{
+    if(result && result.ok===false){
+      pendingSaves=Math.max(0,pendingSaves-1);showSaveStatus('Ошибка сохранения','err');
+      const err=new Error(result.message||'Операция отклонена');
+      if(onError)onError(err);fail(err);return
+    }
+    endSave()
+  })[name](...args)
+}
+
+function backgroundCall(name,args=[],onSuccess,onError){
+  beginSave();
+  google.script.run
+    .withFailureHandler(err=>{
+      pendingSaves=Math.max(0,pendingSaves-1);
+      showSaveStatus('Ошибка сохранения','err');
+      if(onError)onError(err);
+      else fail(err);
+    })
+    .withSuccessHandler(result=>{
+      endSave();
+      if(onSuccess)onSuccess(result);
+    })[name](...args);
+}
+
+function call(name,args=[],cb){
+  setLoading(true);
+  google.script.run.withFailureHandler(fail).withSuccessHandler(x=>{setLoading(false);cb&&cb(x)})[name](...args)
+}
+function render(data){state=data;$('#weekStart').value=data.weekStart;renderHabits();renderDays();renderBottom()}
+
+function renderHabits(){
+  const d=state.days;
+  $('#habitHead').innerHTML=`<div></div>${d.map(x=>`<div>${x.short}<br><small>${formatDate(x.date,true)}</small></div>`).join('')}<div>Выполнено</div><div></div>`;
+  $('#habitRows').innerHTML=state.habits.length ? state.habits.map(h=>{
+    const cells=h.values.map((v,i)=>{
+      if(v===null)return `<div class="hcell check-disabled">—</div>`;
+      return `<div class="hcell"><input type="checkbox" ${v?'checked':''} ${h._pending?'disabled':''} onchange="habitChanged('${d[i].date}','${h.id}',this.checked)"></div>`
+    }).join('');
+    return `<div class="habit-row"><div class="habit-name">${esc(h.name)}</div>${cells}<div class="hcell">${h.completed} / ${h.required}</div><button class="icon-btn danger" title="Удалить привычку" onclick="removeHabit('${h.id}','${esc(h.name)}')">×</button></div>`
+  }).join('') : `<div class="habit-empty">Привычек пока нет. Добавьте первую.</div>`;
+  $('#habitRing').innerHTML=ring(state.habitProgress,'small')+`<div class="small-note">${state.habitCompleted} / ${state.habitRequired} выполнено</div>`;
+  $('#habitLegend').innerHTML=state.habits.map(h=>`<div class="legend-row"><span>${esc(h.name)}</span><b>${h.completed} / ${h.required}</b></div>`).join('')+
+    `<div class="legend-row" style="border-top:1px solid #ddd;padding-top:9px"><span>Всего</span><b>${state.habitCompleted} / ${state.habitRequired}</b></div>`
+}
+
+function renderDays(){
+  $('#days').innerHTML=state.days.map(day=>`
+    <article class="panel day-card">
+      <div class="day-head"><div class="day-name">${day.name}</div><div class="day-date">${formatDate(day.date)}</div></div>
+      <div class="progress-area">${ring(day.progress)}<div class="progress-label">Прогресс на день</div></div>
+      <div class="section-title">Задачи</div>
+      <div class="tasks">
+        ${day.tasks.length ? day.tasks.map((t,idx)=>`<div class="task">
+          <input type="checkbox" ${t.done?'checked':''} ${t._pending?'disabled':''} onchange="taskChanged(${JSON.stringify(t.row)},this.checked)">
+          <span class="task-text" contenteditable="${t._pending?'false':'true'}" onblur="${t._pending?'':`taskTextChanged(${JSON.stringify(t.row)},this.textContent)`}">${esc(t.task)}${t._pending?' <span style="color:#a89578">…</span>':''}</span>
+          <span class="task-actions">
+            <button class="icon-btn" ${idx===0||t._pending?'disabled':''} title="Выше" onclick="moveTaskUI(${JSON.stringify(t.row)},'up')">↑</button>
+            <button class="icon-btn" ${idx===day.tasks.length-1||t._pending?'disabled':''} title="Ниже" onclick="moveTaskUI(${JSON.stringify(t.row)},'down')">↓</button>
+            <button class="icon-btn danger" ${t._pending?'disabled':''} title="Удалить" onclick="deleteTaskUI(${JSON.stringify(t.row)})">×</button>
+          </span>
+        </div>`).join('') : `<div class="empty-state">Задач пока нет</div>`}
+      </div>
+      <button class="add-task" onclick="openTaskModal(${day.index+1})">＋ Добавить задачу</button>
+      <div class="count">${day.completed} / ${day.total}</div>
+    </article>`).join('')
+}
+function renderBottom(){
+  $('#bars').innerHTML=state.days.map(d=>`<div class="bar-wrap"><div class="bar" style="height:${d.progress}%"></div><div class="bar-label">${d.short}<br>${formatDate(d.date,true)}</div></div>`).join('');
+  $('#weekRing').innerHTML=ring(state.weekProgress)+`<div class="small-note">${state.taskCompleted} / ${state.taskTotal} выполнено</div>`
+}
+
+function recalcTaskProgress(){
+  state.days.forEach(day=>{day.completed=day.tasks.filter(t=>t.done).length;day.total=day.tasks.length;day.progress=day.total?Math.round(day.completed*100/day.total):0});
+  state.taskCompleted=state.days.reduce((s,d)=>s+d.completed,0);state.taskTotal=state.days.reduce((s,d)=>s+d.total,0);
+  state.weekProgress=state.taskTotal?Math.round(state.taskCompleted*100/state.taskTotal):0
+}
+function recalcHabitProgress(){
+  let req=0,done=0;
+  state.habits.forEach(h=>{h.required=0;h.completed=0;h.values.forEach(v=>{if(v!==null){h.required++;req++;if(v===true){h.completed++;done++}}})});
+  state.habitRequired=req;state.habitCompleted=done;state.habitProgress=req?Math.round(done*100/req):0
+}
+function taskChanged(row,done){
+  let target=null;for(const day of state.days){const t=day.tasks.find(x=>Number(x.row)===Number(row));if(t){target=t;break}}
+  if(!target)return;const prev=target.done;target.done=!!done;recalcTaskProgress();renderDays();renderBottom();
+  silentSave('toggleTask',[row,done],()=>{target.done=prev;recalcTaskProgress();renderDays();renderBottom()})
+}
+function habitChanged(date,id,done){
+  const habit=state.habits.find(h=>String(h.id)===String(id));const i=state.days.findIndex(d=>d.date===date);if(!habit||i<0)return;
+  if(habit._pending)return;
+  const prev=habit.values[i];habit.values[i]=!!done;recalcHabitProgress();renderHabits();
+  silentSave('toggleHabit',[date,id,done],()=>{habit.values[i]=prev;recalcHabitProgress();renderHabits()})
+}
+function taskTextChanged(row,text){
+  let target=null;for(const day of state.days){const t=day.tasks.find(x=>Number(x.row)===Number(row));if(t){target=t;break}}
+  if(!target)return;const clean=String(text||'').trim(),prev=target.task;if(!clean){renderDays();return}if(clean===prev)return;
+  target.task=clean;silentSave('updateTaskText',[row,clean],()=>{target.task=prev;renderDays()})
+}
+
+let pendingTaskDay=null;
+let pendingConfirmAction=null;
+
+function findTaskByRow(row){
+  for(const day of state.days){
+    const idx=day.tasks.findIndex(t=>String(t.row)===String(row));
+    if(idx>=0) return {day,idx,task:day.tasks[idx]};
+  }
+  return null;
+}
+
+function openTaskModal(day){
+  const dayState=state.days.find(d=>d.index+1===Number(day));
+  if(!dayState)return;
+
+  pendingTaskDay=Number(day);
+  $('#taskModalTitle').textContent=`Новая задача — ${dayState.name.charAt(0)+dayState.name.slice(1).toLowerCase()}`;
+  $('#taskName').value='';
+  $('#taskModalError').textContent='';
+  $('#taskModal').classList.remove('hidden');
+  setTimeout(()=>$('#taskName').focus(),50);
+}
+function closeTaskModal(){
+  $('#taskModal').classList.add('hidden');
+  pendingTaskDay=null;
+}
+function submitTask(){
+  const clean=$('#taskName').value.trim();
+  if(!clean){
+    $('#taskModalError').textContent='Введите название задачи.';
+    return;
+  }
+
+  const day=Number(pendingTaskDay);
+  const dayState=state.days.find(d=>d.index+1===day);
+  if(!dayState)return;
+
+  closeTaskModal();
+
+  const tempRow='tmp_'+Date.now();
+  const tempTask={
+    row:tempRow,
+    position:dayState.tasks.length+1,
+    task:clean,
+    done:false,
+    category:'Custom',
+    _pending:true
+  };
+
+  dayState.tasks.push(tempTask);
+  recalcTaskProgress();
+  renderDays();
+  renderBottom();
+
+  backgroundCall('addTask',[state.weekStart,day,clean],result=>{
+    const currentDay=state.days.find(d=>d.index+1===day);
+    if(!currentDay)return;
+
+    const local=currentDay.tasks.find(t=>String(t.row)===String(tempRow));
+    if(local && result && result.task){
+      local.row=result.task.row;
+      local.position=result.task.position;
+      local._pending=false;
+    }
+    renderDays();
+  },err=>{
+    const currentDay=state.days.find(d=>d.index+1===day);
+    if(currentDay){
+      currentDay.tasks=currentDay.tasks.filter(t=>String(t.row)!==String(tempRow));
+      recalcTaskProgress();
+      renderDays();
+      renderBottom();
+    }
+    fail(err);
+  });
+}
+
+function openConfirmModal({title,text,subtext='',button='Удалить',action}){
+  pendingConfirmAction=action;
+  $('#confirmTitle').textContent=title;
+  $('#confirmText').textContent=text;
+  $('#confirmSubtext').textContent=subtext;
+  $('#confirmSubtext').style.display=subtext?'block':'none';
+  $('#confirmButton').textContent=button;
+  $('#confirmModal').classList.remove('hidden');
+}
+function closeConfirmModal(){
+  $('#confirmModal').classList.add('hidden');
+  pendingConfirmAction=null;
+}
+function submitConfirm(){
+  const action=pendingConfirmAction;
+  closeConfirmModal();
+  if(action)action();
+}
+
+function deleteTaskUI(row){
+  const found=findTaskByRow(row);
+  if(!found)return;
+
+  openConfirmModal({
+    title:'Удалить задачу?',
+    text:`«${found.task.task}»`,
+    subtext:'Задача исчезнет из текущей недели. Остальная история не изменится.',
+    action:()=>performDeleteTask(row)
+  });
+}
+function performDeleteTask(row){
+  const found=findTaskByRow(row);
+  if(!found)return;
+
+  const {day,idx,task}=found;
+  day.tasks.splice(idx,1);
+  recalcTaskProgress();
+  renderDays();
+  renderBottom();
+
+  backgroundCall('deleteTask',[row],()=>{},err=>{
+    day.tasks.splice(idx,0,task);
+    recalcTaskProgress();
+    renderDays();
+    renderBottom();
+    fail(err);
+  });
+}
+
+function moveTaskUI(row,direction){
+  const found=findTaskByRow(row);
+  if(!found)return;
+
+  const {day,idx}=found;
+  const targetIdx=direction==='up'?idx-1:idx+1;
+  if(targetIdx<0||targetIdx>=day.tasks.length)return;
+
+  const first=day.tasks[idx];
+  const second=day.tasks[targetIdx];
+  if(first._pending||second._pending)return;
+
+  const oldFirstPos=first.position;
+  const oldSecondPos=second.position;
+
+  [day.tasks[idx],day.tasks[targetIdx]]=[day.tasks[targetIdx],day.tasks[idx]];
+  first.position=oldSecondPos;
+  second.position=oldFirstPos;
+  renderDays();
+
+  backgroundCall('moveTask',[row,direction],()=>{},err=>{
+    const current=state.days.find(d=>d.index===day.index);
+    if(current){
+      const a=current.tasks.findIndex(t=>String(t.row)===String(row));
+      const b=direction==='up'?a+1:a-1;
+      if(a>=0&&b>=0&&b<current.tasks.length){
+        [current.tasks[a],current.tasks[b]]=[current.tasks[b],current.tasks[a]];
+        current.tasks[a].position=oldFirstPos;
+        current.tasks[b].position=oldSecondPos;
+      }
+      renderDays();
+    }
+    fail(err);
+  });
+}
+
+function openHabitModal(){
+  $('#habitName').value='';
+  $('#habitModalError').textContent='';
+  document.querySelectorAll('.habitDay').forEach(x=>x.checked=true);
+  $('#habitModal').classList.remove('hidden');
+  setTimeout(()=>$('#habitName').focus(),50);
+}
+function closeHabitModal(){$('#habitModal').classList.add('hidden')}
+
+function submitHabit(){
+  const name=$('#habitName').value.trim();
+  const schedule=[...document.querySelectorAll('.habitDay')].map(x=>x.checked);
+
+  if(!name){
+    $('#habitModalError').textContent='Введите название привычки.';
+    return;
+  }
+  if(!schedule.some(Boolean)){
+    $('#habitModalError').textContent='Выбери хотя бы один день недели.';
+    return;
+  }
+  const normalizedName=name.toLowerCase();
+  if(state.habits.some(h=>String(h.name||'').trim().toLowerCase()===normalizedName)){
+    $('#habitModalError').textContent='Привычка с таким названием уже существует';
+    return;
+  }
+
+  closeHabitModal();
+
+  const tempId='tmp_h_'+Date.now();
+  const tempHabit={
+    id:tempId,
+    name,
+    schedule:[...schedule],
+    values:schedule.map(enabled=>enabled?false:null),
+    required:schedule.filter(Boolean).length,
+    completed:0,
+    _pending:true
+  };
+
+  state.habits.push(tempHabit);
+  recalcHabitProgress();
+  renderHabits();
+
+  backgroundCall('addHabit',[name,schedule],result=>{
+    if(result && result.ok===false){
+      state.habits=state.habits.filter(h=>h.id!==tempId);
+      recalcHabitProgress();
+      renderHabits();
+      fail(new Error(result.message||'Не удалось добавить привычку'));
+      return;
+    }
+    const local=state.habits.find(h=>h.id===tempId);
+    if(local && result && result.id){
+      local.id=String(result.id);
+      local._pending=false;
+    }
+    renderHabits();
+  },err=>{
+    state.habits=state.habits.filter(h=>h.id!==tempId);
+    recalcHabitProgress();
+    renderHabits();
+    fail(err);
+  });
+}
+
+function removeHabit(id,name){
+  const habit=state.habits.find(h=>String(h.id)===String(id));
+  if(!habit)return;
+
+  openConfirmModal({
+    title:'Удалить привычку?',
+    text:`«${habit.name}»`,
+    subtext:'Старые отметки останутся в истории. Галочки остальных привычек сохранятся.',
+    action:()=>performDeleteHabit(id)
+  });
+}
+function performDeleteHabit(id){
+  const idx=state.habits.findIndex(h=>String(h.id)===String(id));
+  if(idx<0)return;
+
+  const habit=state.habits[idx];
+  state.habits.splice(idx,1);
+  recalcHabitProgress();
+  renderHabits();
+
+  backgroundCall('deleteHabit',[id],()=>{},err=>{
+    state.habits.splice(idx,0,habit);
+    recalcHabitProgress();
+    renderHabits();
+    fail(err);
+  });
+}
+
+function isoAddDays(iso,n){
+  if(!isIsoDate(iso)) return null;
+  const [y,m,d]=iso.split('-').map(Number);
+  const dt=new Date(Date.UTC(y,m-1,d));
+  dt.setUTCDate(dt.getUTCDate()+n);
+  return dt.toISOString().slice(0,10);
+}
+function shiftWeek(days){
+  const next=isoAddDays(state.weekStart,days);
+  if(!next){fail(new Error('Некорректная дата недели. Обнови страницу.'));return}
+  call('setWeekStart',[next],render);
+}
+function goCurrentWeek(){
+  const now=new Date();const dow=(now.getDay()+6)%7;const monday=new Date(now);monday.setDate(now.getDate()-dow);
+  const iso=`${monday.getFullYear()}-${String(monday.getMonth()+1).padStart(2,'0')}-${String(monday.getDate()).padStart(2,'0')}`;
+  call('setWeekStart',[iso],render)
+}
+$('#weekStart').addEventListener('change',e=>call('setWeekStart',[e.target.value],render));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeHabitModal();
+    closeTaskModal();
+    closeConfirmModal();
+  }
+  if(e.key==='Enter'&&!$('#taskModal').classList.contains('hidden')){
+    e.preventDefault();submitTask();
+  }else if(e.key==='Enter'&&!$('#habitModal').classList.contains('hidden')){
+    e.preventDefault();submitHabit();
+  }
+});
+
+google.script.run.withFailureHandler(fail).withSuccessHandler(x=>{setLoading(false);render(x)}).getAppData();
+</script>
+</body>
+</html>

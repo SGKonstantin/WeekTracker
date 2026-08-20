@@ -1,0 +1,30 @@
+name: Предложить улучшение
+description: Предложить новую функцию или улучшение WeekTracker
+title: "[Идея]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую проблему решает идея
+      description: Опишите пользовательскую потребность или ограничение.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Предлагаемое поведение
+      description: Как должна работать новая функция с точки зрения пользователя?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Рассмотренные альтернативы
+      description: Какие обходные пути или другие решения вы пробовали?
+  - type: textarea
+    id: context
+    attributes:
+      label: Дополнительный контекст
+      description: Добавьте очищенные примеры или screenshots, если они помогают понять идею.

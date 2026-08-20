@@ -1,0 +1,40 @@
+# Local Google Apps Script binding
+.clasp.json
+.clasprc.json
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+credentials.json
+credentials*.json
+client_secret*.json
+service-account*.json
+*.pem
+*.key
+
+# Node
+node_modules/
+npm-debug.log*
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+
+# Personal data / exports
+data/
+backups/
+*.xlsx
+*.csv
+
+# Vitest
+.vitest/
+coverage/

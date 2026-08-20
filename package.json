@@ -1,0 +1,20 @@
+{
+  "name": "week-tracker",
+  "version": "0.1.0",
+  "description": "A lightweight weekly planner and habit tracker built with Google Apps Script and Google Sheets",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:syntax": "node scripts/check-syntax.mjs",
+    "check:project": "node scripts/check-project.mjs",
+    "check": "npm run check:syntax && npm test && npm run check:project"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "vitest": "^4.1.10"
+  },
+  "private": true
+}
