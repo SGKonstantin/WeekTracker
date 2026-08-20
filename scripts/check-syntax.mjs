@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const sourceRoot = path.join(projectRoot, 'src');
 const errors = [];
 
 function checkJavaScript(source, filename) {
@@ -14,24 +15,24 @@ function checkJavaScript(source, filename) {
   }
 }
 
-const productionFiles = fs.readdirSync(projectRoot, { withFileTypes: true })
+const productionFiles = fs.readdirSync(sourceRoot, { withFileTypes: true })
   .filter(entry => entry.isFile() && entry.name.endsWith('.gs'))
   .map(entry => entry.name)
   .sort();
 
 if (productionFiles.length === 0) {
-  errors.push('No production .gs files found in the project root.');
+  errors.push('No production .gs files found in src/.');
 }
 
 for (const filename of productionFiles) {
-  const source = fs.readFileSync(path.join(projectRoot, filename), 'utf8');
-  checkJavaScript(source, filename);
+  const source = fs.readFileSync(path.join(sourceRoot, filename), 'utf8');
+  checkJavaScript(source, `src/${filename}`);
 }
 
 const indexFilename = 'Index.html';
-const indexPath = path.join(projectRoot, indexFilename);
+const indexPath = path.join(sourceRoot, indexFilename);
 if (!fs.existsSync(indexPath)) {
-  errors.push(`${indexFilename}: file not found`);
+  errors.push(`src/${indexFilename}: file not found`);
 } else {
   const html = fs.readFileSync(indexPath, 'utf8');
   const scriptPattern = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
@@ -40,7 +41,7 @@ if (!fs.existsSync(indexPath)) {
     errors.push(`${indexFilename}: no inline <script> blocks found`);
   }
   scripts.forEach((match, index) => {
-    checkJavaScript(match[1], `${indexFilename}#script-${index + 1}`);
+    checkJavaScript(match[1], `src/${indexFilename}#script-${index + 1}`);
   });
 }
 
@@ -49,5 +50,5 @@ if (errors.length > 0) {
   errors.forEach(error => console.error(`- ${error}`));
   process.exitCode = 1;
 } else {
-  console.log(`Syntax check passed: ${productionFiles.length} .gs files and Index.html scripts.`);
+  console.log(`Syntax check passed: ${productionFiles.length} src/*.gs files and src/Index.html scripts.`);
 }

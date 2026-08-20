@@ -6,13 +6,13 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const errors = [];
 
 const requiredFiles = [
-  'Code.gs',
-  'Core.gs',
-  'Repository.gs',
-  'Setup.gs',
-  'Menu.gs',
-  'Index.html',
-  'appsscript.json',
+  'src/Code.gs',
+  'src/Core.gs',
+  'src/Repository.gs',
+  'src/Setup.gs',
+  'src/Menu.gs',
+  'src/Index.html',
+  'src/appsscript.json',
   '.gitignore',
   '.claspignore',
   'package.json',
@@ -21,9 +21,9 @@ const requiredFiles = [
   'README.en.md',
   'LICENSE',
   'CHANGELOG.md',
-  'CONTRIBUTING.md',
-  'SECURITY.md',
-  'SUPPORT.md',
+  '.github/CONTRIBUTING.md',
+  '.github/SECURITY.md',
+  'docs/SUPPORT.md',
   'docs/INSTALLATION.md',
   'docs/USER_GUIDE.md',
   'docs/DEVELOPMENT.md',
@@ -150,6 +150,9 @@ for (const relativePath of publicFiles) {
   const source = fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
   if (/WeekArc/i.test(source)) {
     errors.push(`${relativePath}: forbidden legacy project name WeekArc`);
+  }
+  if (/APP_DayNotes/i.test(source)) {
+    errors.push(`${relativePath}: forbidden removed schema APP_DayNotes`);
   }
 }
 
