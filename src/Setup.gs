@@ -12,14 +12,17 @@ function setupProject() {
   const boundSpreadsheet = getBoundSpreadsheet_();
 
   if (boundSpreadsheet) {
+    const boundSpreadsheetId = boundSpreadsheet.getId();
+    const isRepeatedBoundSetup = props.getProperty('SPREADSHEET_ID') === boundSpreadsheetId;
+
     ensureWeekTrackerSchema_(boundSpreadsheet, true);
+    initializeWeekTrackerSettings_(boundSpreadsheet, !isRepeatedBoundSetup);
 
     props.setProperties({
-      SPREADSHEET_ID: boundSpreadsheet.getId(),
+      SPREADSHEET_ID: boundSpreadsheetId,
       WEEKTRACKER_VERSION: WEEKTRACKER_VERSION
     });
 
-    initializeWeekTrackerSettings_(boundSpreadsheet);
     SpreadsheetApp.flush();
 
     console.log('WeekTracker bound setup complete: ' + boundSpreadsheet.getUrl());
@@ -161,14 +164,15 @@ function updateWeekTrackerLandingReady_() {
   }
 }
 
-function initializeWeekTrackerSettings_(spreadsheet) {
+function initializeWeekTrackerSettings_(spreadsheet, resetWeekStart) {
   const settings = spreadsheet.getSheetByName('APP_Settings');
   if (!settings) throw new Error('APP_Settings sheet is missing.');
 
   const rows = settings.getDataRange().getValues();
   const existingKeys = new Set(rows.slice(1).map(r => String(r[0])));
+  const currentWeekStart = mondayIso_(todayIso_());
   const defaults = [
-    ['weekStart', mondayIso_(todayIso_())],
+    ['weekStart', currentWeekStart],
     ['title', 'WeekTracker'],
     ['subtitle', 'Недельный планер и трекер привычек'],
     ['theme', 'warm']
@@ -177,6 +181,13 @@ function initializeWeekTrackerSettings_(spreadsheet) {
   if (defaults.length) {
     settings.getRange(settings.getLastRow() + 1, 1, defaults.length, 2).setValues(defaults);
     settings.getRange(2, 2, Math.max(settings.getLastRow() - 1, 1), 1).setNumberFormat('@');
+  }
+
+  if (resetWeekStart && existingKeys.has('weekStart')) {
+    const weekStartIndex = rows.slice(1).findIndex(row => String(row[0]) === 'weekStart');
+    const weekStartCell = settings.getRange(weekStartIndex + 2, 2);
+    weekStartCell.setNumberFormat('@');
+    weekStartCell.setValue(currentWeekStart);
   }
 }
 

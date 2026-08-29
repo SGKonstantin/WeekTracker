@@ -5,9 +5,9 @@ function columnToNumber(column) {
   return [...column].reduce((value, char) => value * 26 + char.charCodeAt(0) - 64, 0);
 }
 
-function createSheet(initialName = 'Sheet1') {
+function createSheet(initialName = 'Sheet1', initialRows = []) {
   let name = initialName;
-  let rows = [];
+  let rows = initialRows.map(row => [...row]);
   const numberFormats = [];
   let hidden = false;
 
@@ -78,8 +78,30 @@ function createSpreadsheet(id, initialSheets = [createSheet()]) {
   };
 }
 
-function createSetupEnvironment({ activeSpreadsheet = null, webAppUrl = null } = {}) {
-  const properties = webAppUrl ? { WEB_APP_URL: webAppUrl } : {};
+function fixedDateClass(instant) {
+  const NativeDate = Date;
+  return class FixedDate extends NativeDate {
+    constructor(...args) {
+      super(...(args.length ? args : [instant]));
+    }
+
+    static now() {
+      return new NativeDate(instant).getTime();
+    }
+  };
+}
+
+function createSetupEnvironment({
+  activeSpreadsheet = null,
+  webAppUrl = null,
+  configuredSpreadsheetId = null,
+  currentInstant = '2026-08-29T12:00:00Z',
+  scriptTimeZone = 'Etc/UTC',
+} = {}) {
+  const properties = {
+    ...(webAppUrl ? { WEB_APP_URL: webAppUrl } : {}),
+    ...(configuredSpreadsheetId ? { SPREADSHEET_ID: configuredSpreadsheetId } : {}),
+  };
   const created = [];
   const standaloneSpreadsheet = createSpreadsheet('standalone-id');
   const SpreadsheetApp = {
@@ -102,13 +124,94 @@ function createSetupEnvironment({ activeSpreadsheet = null, webAppUrl = null } =
       deleteProperty: key => { delete properties[key]; },
     }),
   };
-  const functions = loader.loadAppsScript({ SpreadsheetApp, PropertiesService });
+  const functions = loader.loadAppsScript({
+    Date: fixedDateClass(currentInstant),
+    Session: { getScriptTimeZone: () => scriptTimeZone },
+    SpreadsheetApp,
+    PropertiesService,
+  });
   return { properties, created, standaloneSpreadsheet, ...functions };
 }
 
 const systemSheets = ['APP_Settings', 'APP_Tasks', 'APP_Habits', 'APP_HabitLog'];
+const taskHeader = ['weekStart', 'day', 'position', 'task', 'done', 'category', 'active'];
+const habitHeader = ['habitId', 'name', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'active'];
+
+function settingValue(spreadsheet, key) {
+  const rows = spreadsheet.getSheetByName('APP_Settings')._rows();
+  return rows.find(row => row[0] === key)?.[1];
+}
 
 describe('setupProject installation modes', () => {
+  test('replaces a stale template weekStart with the current Monday on first bound setup', () => {
+    const bound = createSpreadsheet('bound-id', [
+      createSheet('WeekTracker'),
+      createSheet('APP_Settings', [
+        ['key', 'value'],
+        ['weekStart', '2026-08-17'],
+      ]),
+    ]);
+    const environment = createSetupEnvironment({ activeSpreadsheet: bound });
+
+    environment.setupProject();
+
+    expect(settingValue(bound, 'weekStart')).toBe('2026-08-24');
+  });
+
+  test('preserves weekStart on repeated bound setup', () => {
+    const bound = createSpreadsheet('bound-id', [
+      createSheet('WeekTracker'),
+      createSheet('APP_Settings', [
+        ['key', 'value'],
+        ['weekStart', '2026-08-17'],
+      ]),
+    ]);
+    const environment = createSetupEnvironment({
+      activeSpreadsheet: bound,
+      configuredSpreadsheetId: 'bound-id',
+    });
+
+    environment.setupProject();
+
+    expect(settingValue(bound, 'weekStart')).toBe('2026-08-17');
+  });
+
+  test('preserves existing tasks and habits on repeated bound setup', () => {
+    const existingTask = ['2026-08-17', 1, 1, 'Existing task', true, 'Custom', true];
+    const existingHabit = ['h1', 'Existing habit', true, true, true, true, true, false, false, true];
+    const bound = createSpreadsheet('bound-id', [
+      createSheet('WeekTracker'),
+      createSheet('APP_Settings', [['key', 'value'], ['weekStart', '2026-08-17']]),
+      createSheet('APP_Tasks', [taskHeader, existingTask]),
+      createSheet('APP_Habits', [habitHeader, existingHabit]),
+    ]);
+    const environment = createSetupEnvironment({
+      activeSpreadsheet: bound,
+      configuredSpreadsheetId: 'bound-id',
+    });
+
+    environment.setupProject();
+
+    expect(bound.getSheetByName('APP_Tasks')._rows()).toEqual([taskHeader, existingTask]);
+    expect(bound.getSheetByName('APP_Habits')._rows()).toEqual([habitHeader, existingHabit]);
+  });
+
+  test('uses the script timezone when current Monday differs from UTC Monday', () => {
+    const bound = createSpreadsheet('bound-id', [
+      createSheet('WeekTracker'),
+      createSheet('APP_Settings', [['key', 'value'], ['weekStart', '2026-08-10']]),
+    ]);
+    const environment = createSetupEnvironment({
+      activeSpreadsheet: bound,
+      currentInstant: '2026-08-23T23:30:00Z',
+      scriptTimeZone: 'Asia/Tokyo',
+    });
+
+    environment.setupProject();
+
+    expect(settingValue(bound, 'weekStart')).toBe('2026-08-24');
+  });
+
   test('uses the active bound spreadsheet without creating a separate spreadsheet', () => {
     const bound = createSpreadsheet('bound-id');
     const environment = createSetupEnvironment({ activeSpreadsheet: bound });
