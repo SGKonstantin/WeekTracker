@@ -16,30 +16,51 @@
     button{cursor:pointer}
     .app{max-width:1780px;margin:0 auto;padding:14px}
     .panel{background:var(--panel);border:1px solid var(--line);border-radius:5px;box-shadow:var(--shadow)}
-    .top{display:grid;grid-template-columns:290px 1fr;gap:16px;margin-bottom:14px}
-    .brand{min-height:238px;display:flex;flex-direction:column}
-    .brand-main{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}.brand-name{font-size:42px;font-weight:700;letter-spacing:-1px}.brand-subtitle{font-size:17px;font-weight:600;color:#8b714b;margin-top:8px}
-    .week-control{display:grid;grid-template-columns:96px 1fr;border-top:1px solid var(--line)}
-    .week-control label,.week-control input{padding:13px 10px;border:0;background:transparent}
-    .week-control label{font-size:13px;text-align:center;background:#f4eddd}
-    .week-control input{text-align:center;outline:none}
+    .top{display:grid;grid-template-columns:minmax(270px,.72fr) minmax(390px,1fr) minmax(650px,1.6fr);gap:14px;margin-bottom:14px;align-items:stretch}
+    .brand{min-height:250px;display:flex;flex-direction:column}
+    .brand-main{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}.brand-name{font-size:38px;font-weight:700;letter-spacing:-1px}.brand-subtitle{font-size:16px;font-weight:600;color:#8b714b;margin-top:6px}
+    .week-control{display:grid;grid-template-columns:100px 1fr;border-top:1px solid var(--line);position:relative}
+    .week-control-label{padding:12px 8px;font-size:12px;text-align:center;background:#f4eddd;display:grid;place-items:center}
+    .week-picker-anchor{position:relative;min-width:0}
+    .week-date-trigger{width:100%;height:100%;padding:10px 12px;border:0;background:transparent;color:var(--text);display:flex;align-items:center;justify-content:center;gap:9px;font-weight:600}
+    .week-date-trigger:hover,.week-date-trigger[aria-expanded=true]{background:#fbf7ef;color:#6e4617}
+    .calendar-icon{font-size:17px;color:var(--gold)}
     .week-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px;border-top:1px solid var(--line)}
     .soft-btn{border:1px solid var(--line);background:#fbf7ef;border-radius:5px;padding:7px 8px;color:#604b2d}
     .soft-btn:hover{background:#f3ead9}
-    .habits-title{display:flex;align-items:center;justify-content:center;gap:12px;padding:11px;font-weight:700;color:#6e4617;border-bottom:1px solid var(--line)}
-    .habits-title .add-inline{position:absolute;right:26px}
-    .habits-body{display:grid;grid-template-columns:1fr 280px;min-height:190px}
-    .habit-table{padding:0 14px 10px;overflow-x:auto}
-    .habit-head,.habit-row{display:grid;grid-template-columns:145px repeat(7,1fr) 76px 30px;align-items:center}
-    .habit-head{font-size:13px;text-align:center;padding:9px 0;border-bottom:1px solid var(--line2);min-width:760px}
-    .habit-row{min-height:46px;border-bottom:1px solid var(--line2);font-size:14px;min-width:760px}
-    .habit-name{font-weight:600}
+    .date-picker{position:absolute;top:calc(100% + 7px);left:0;width:300px;max-width:calc(100vw - 32px);padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:7px;box-shadow:0 16px 38px rgba(60,45,25,.16);z-index:60}
+    .calendar-header{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;margin-bottom:10px}
+    .calendar-month{text-align:center;font-weight:700;color:#6e4617;text-transform:capitalize}
+    .calendar-nav{border:0;background:transparent;border-radius:5px;color:#74552d;font-size:22px;line-height:30px;padding:0}
+    .calendar-nav:hover{background:#f3ead9}
+    .calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+    .calendar-weekdays{font-size:11px;color:var(--muted);margin-bottom:4px}
+    .calendar-day{border:1px solid transparent;background:transparent;border-radius:5px;padding:7px 2px;font-size:12px;color:var(--text)}
+    .calendar-day:hover{border-color:var(--gold2);background:#fbf5e9}.calendar-day.muted{color:#b4aa9b}.calendar-day.selected{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700}
+    .dashboard-panel{min-height:250px;display:flex;flex-direction:column;min-width:0}
+    .panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;font-weight:700;color:#6e4617;border-bottom:1px solid var(--line)}
+    .panel-summary{font-size:12px;font-weight:600;color:var(--muted);text-align:right;white-space:nowrap}.panel-summary b{color:#8b642d;font-size:14px}
+    .week-chart{padding:10px 14px 12px;flex:1;min-height:0}
+    .chart-plot{height:190px;position:relative;border-bottom:1px solid #cfc4b3;margin-left:25px}
+    .chart-guides{position:absolute;inset:0 0 35px 0;pointer-events:none}
+    .chart-guide{position:absolute;left:0;right:0;border-top:1px solid var(--line2)}
+    .chart-guide span{position:absolute;right:calc(100% + 6px);top:-7px;font-size:10px;color:var(--muted)}
+    .week-bars{position:absolute;inset:0;display:grid;grid-template-columns:repeat(7,minmax(34px,1fr));gap:8px}
+    .bar-wrap{display:grid;grid-template-rows:1fr 35px;min-width:0}.bar-slot{display:flex;align-items:flex-end;justify-content:center;min-height:0}
+    .bar{width:min(34px,72%);background:linear-gradient(#d9b273,#b98b45);border-radius:3px 3px 0 0;transition:height .18s ease}
+    .bar-label{font-size:10.5px;padding-top:5px;text-align:center;white-space:nowrap;line-height:1.25}
+    .chart-empty{position:absolute;inset:0 0 35px;display:grid;place-items:center;color:var(--muted);font-size:12px}
+    .habits-title{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;font-weight:700;color:#6e4617;border-bottom:1px solid var(--line)}
+    .habits-body{min-height:190px;min-width:0}
+    .habit-table{padding:0 12px 9px;overflow-x:auto}
+    .habit-head,.habit-row{display:grid;grid-template-columns:minmax(118px,1.45fr) repeat(7,minmax(38px,.55fr)) minmax(60px,.75fr) 28px;align-items:center}
+    .habit-head{font-size:13px;text-align:center;padding:9px 0;border-bottom:1px solid var(--line2);min-width:600px}
+    .habit-row{min-height:42px;border-bottom:1px solid var(--line2);font-size:13px;min-width:600px}
+    .habit-name{font-weight:600;overflow-wrap:anywhere;padding-right:6px}
     .hcell{text-align:center}
     .icon-btn{border:0;background:transparent;color:#9b8b75;padding:4px;border-radius:4px}
     .icon-btn:hover{background:#f2ebe0;color:#57442b}
     .danger:hover{color:var(--danger);background:#f8eae7}
-    .habits-summary{border-left:1px solid var(--line2);display:grid;grid-template-columns:150px 1fr;align-items:center;padding:15px}
-    .legend h3{margin:0 0 12px;font-size:14px}.legend-row{display:flex;justify-content:space-between;margin:10px 0;font-size:13px}
     .days{display:grid;grid-template-columns:repeat(7,minmax(205px,1fr));gap:14px;align-items:stretch}
     .day-card{overflow:hidden;display:flex;flex-direction:column;min-height:520px}
     .day-head{text-align:center;background:#f5eddd;padding:9px 5px;border-bottom:1px solid var(--line)}
@@ -63,13 +84,6 @@
     .add-habit{width:100%;margin:10px 0 2px;border:1px dashed #ccb994;background:#fbf7ef;color:#7a5c2f;border-radius:5px;padding:9px}
     .add-habit:hover{background:#f4ebda}
     .count{text-align:center;padding:9px;border-top:1px solid var(--line);font-size:13px;background:#fbf7ef}
-    .bottom{display:grid;grid-template-columns:1.25fr .45fr;gap:14px;margin-top:18px}
-    .chart-panel{padding:12px 18px 14px}.chart-title{text-align:center;font-weight:700;color:#6e4617;margin-bottom:6px}
-    .bars{height:185px;display:flex;align-items:flex-end;gap:22px;padding:10px 22px 24px;border-bottom:1px solid #cfc4b3}
-    .bar-wrap{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:38px}
-    .bar{width:38px;background:linear-gradient(#d9b273,#b98b45);min-height:2px}
-    .bar-label{font-size:11px;margin-top:7px;text-align:center;white-space:nowrap}
-    .week-ring{display:flex;align-items:center;justify-content:center;flex-direction:column;padding:15px}
     .small-note{font-size:12px;margin-top:7px}.check-disabled{color:#aaa}
     .loading{position:fixed;inset:0;background:rgba(246,242,233,.82);display:grid;place-items:center;font-weight:700;z-index:50}
     .hidden{display:none!important}
@@ -88,9 +102,9 @@
     .modal-text{font-size:14px;line-height:1.45;color:var(--text);margin:4px 0 6px}
     .modal-subtext{font-size:12.5px;line-height:1.45;color:var(--muted);margin-top:6px}
     .modal-error{font-size:12px;color:#9c554c;margin-top:8px;min-height:15px}.empty-state{color:var(--muted);font-size:12px;text-align:center;padding:18px 8px}.habit-empty{color:var(--muted);font-size:13px;text-align:center;padding:16px 8px;border-bottom:1px solid var(--line2)}
-    @media(max-width:1350px){.days{grid-template-columns:repeat(4,1fr)}}
-    @media(max-width:900px){.top{grid-template-columns:1fr}.habits-body{grid-template-columns:1fr}.habits-summary{border-left:0;border-top:1px solid var(--line2)}.days{grid-template-columns:repeat(2,1fr)}.bottom{grid-template-columns:1fr}}
-    @media(max-width:560px){.app{padding:8px}.days{grid-template-columns:1fr}.brand-main{font-size:32px}.bars{gap:8px;padding-left:5px;padding-right:5px}.bar{width:26px}}
+    @media(max-width:1365px){.top{grid-template-columns:minmax(270px,.7fr) minmax(420px,1.3fr)}.habits-panel{grid-column:1/-1}.days{grid-template-columns:repeat(4,1fr)}}
+    @media(max-width:900px){.top{grid-template-columns:1fr}.habits-panel{grid-column:auto}.days{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.app{padding:8px}.days{grid-template-columns:1fr}.brand-name{font-size:32px}.panel-title,.habits-title{align-items:flex-start;flex-direction:column}.panel-summary{text-align:left}.chart-plot{margin-left:20px}.week-bars{gap:3px}.bar{width:min(26px,76%)}.date-picker{position:fixed;left:8px;right:8px;top:96px;width:auto;max-width:none}}
   </style>
 </head>
 <body>
@@ -102,17 +116,42 @@
   <section class="top">
     <div class="panel brand">
       <div class="brand-main"><div><div class="brand-name">WeekTracker</div><div class="brand-subtitle">Недельный планер</div></div></div>
-      <div class="week-control"><label>Начало недели</label><input id="weekStart" type="date"></div>
+      <div class="week-control">
+        <div class="week-control-label">Начало недели</div>
+        <div class="week-picker-anchor">
+          <button id="weekDateButton" class="week-date-trigger" type="button" aria-label="Выбрать начало недели" aria-haspopup="dialog" aria-expanded="false" onclick="toggleDatePicker()">
+            <span id="weekStartDisplay">—</span><span class="calendar-icon" aria-hidden="true">▦</span>
+          </button>
+          <div id="datePicker" class="date-picker hidden" role="dialog" aria-label="Выбор даты начала недели">
+            <div class="calendar-header">
+              <button class="calendar-nav" type="button" aria-label="Предыдущий месяц" title="Предыдущий месяц" onclick="changePickerMonth(-1)">‹</button>
+              <div id="calendarMonth" class="calendar-month"></div>
+              <button class="calendar-nav" type="button" aria-label="Следующий месяц" title="Следующий месяц" onclick="changePickerMonth(1)">›</button>
+            </div>
+            <div class="calendar-weekdays" aria-hidden="true"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+            <div id="calendarGrid" class="calendar-grid"></div>
+          </div>
+        </div>
+      </div>
       <div class="week-nav">
-        <button class="soft-btn" onclick="shiftWeek(-7)">← Неделя</button>
-        <button class="soft-btn" onclick="goCurrentWeek()">Сегодня</button>
-        <button class="soft-btn" onclick="shiftWeek(7)">Неделя →</button>
+        <button class="soft-btn" title="Предыдущая неделя" aria-label="Предыдущая неделя" onclick="shiftWeek(-7)">← Неделя</button>
+        <button class="soft-btn" title="Текущая неделя" aria-label="Перейти к текущей неделе" onclick="goCurrentWeek()">Сегодня</button>
+        <button class="soft-btn" title="Следующая неделя" aria-label="Следующая неделя" onclick="shiftWeek(7)">Неделя →</button>
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel dashboard-panel">
+      <div class="panel-title">
+        <span>Прогресс недели</span>
+        <span id="weekSummary" class="panel-summary"></span>
+      </div>
+      <div id="weekChart" class="week-chart"></div>
+    </div>
+
+    <div class="panel dashboard-panel habits-panel">
       <div class="habits-title">
-        <span>Ежедневные привычки</span>
+        <span>Привычки</span>
+        <span id="habitSummary" class="panel-summary"></span>
       </div>
       <div class="habits-body">
         <div class="habit-table">
@@ -120,26 +159,11 @@
           <div id="habitRows"></div>
           <button class="add-habit" onclick="openHabitModal()">＋ Добавить привычку</button>
         </div>
-        <div class="habits-summary">
-          <div id="habitRing"></div>
-          <div class="legend">
-            <h3>Прогресс привычек</h3>
-            <div id="habitLegend"></div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
 
   <section id="days" class="days"></section>
-
-  <section class="bottom">
-    <div class="panel chart-panel">
-      <div class="chart-title">Общий прогресс недели</div>
-      <div id="bars" class="bars"></div>
-    </div>
-    <div class="panel week-ring" id="weekRing"></div>
-  </section>
 </div>
 
 <div id="habitModal" class="modal-wrap hidden" onclick="if(event.target===this)closeHabitModal()">
@@ -199,6 +223,50 @@ function formatDate(iso,short=false){
   const[y,m,d]=iso.split('-');
   return short?`${d}.${m}`:`${d}.${m}.${y}`;
 }
+const calendarMonths=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+let pickerYear=0,pickerMonth=0;
+function isoFromUtcDate(date){return date.toISOString().slice(0,10)}
+function closeDatePicker(){
+  $('#datePicker').classList.add('hidden');
+  $('#weekDateButton').setAttribute('aria-expanded','false');
+}
+function openDatePicker(){
+  const iso=state?.weekStart;
+  if(isIsoDate(iso)){
+    const[y,m]=iso.split('-').map(Number);pickerYear=y;pickerMonth=m-1;
+  }else{
+    const now=new Date();pickerYear=now.getFullYear();pickerMonth=now.getMonth();
+  }
+  renderDatePicker();
+  $('#datePicker').classList.remove('hidden');
+  $('#weekDateButton').setAttribute('aria-expanded','true');
+}
+function toggleDatePicker(){
+  if($('#datePicker').classList.contains('hidden'))openDatePicker();else closeDatePicker();
+}
+function changePickerMonth(delta){
+  const monthIndex=pickerYear*12+pickerMonth+Number(delta);
+  pickerYear=Math.floor(monthIndex/12);pickerMonth=((monthIndex%12)+12)%12;
+  renderDatePicker();
+}
+function renderDatePicker(){
+  $('#calendarMonth').textContent=`${calendarMonths[pickerMonth]} ${pickerYear}`;
+  const first=new Date(Date.UTC(pickerYear,pickerMonth,1));
+  const mondayOffset=(first.getUTCDay()+6)%7;
+  $('#calendarGrid').innerHTML=Array.from({length:42},(_,index)=>{
+    const date=new Date(Date.UTC(pickerYear,pickerMonth,1-mondayOffset+index));
+    const iso=isoFromUtcDate(date);
+    const classes=['calendar-day'];
+    if(date.getUTCMonth()!==pickerMonth)classes.push('muted');
+    if(state&&iso===state.weekStart)classes.push('selected');
+    return `<button type="button" class="${classes.join(' ')}" aria-label="${formatDate(iso)}" onclick="selectPickerDate('${iso}')">${date.getUTCDate()}</button>`
+  }).join('');
+}
+function selectPickerDate(iso){
+  if(!isIsoDate(iso))return;
+  closeDatePicker();
+  call('setWeekStart',[iso],render);
+}
 function ring(p,cls=''){return `<div class="ring ${cls}" style="--p:${p}"><span>${p}%</span></div>`}
 function setLoading(v){$('#loading').classList.toggle('hidden',!v)}
 function fail(err){setLoading(false);const e=$('#error');e.textContent=err?.message||String(err);e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),5000)}
@@ -244,7 +312,7 @@ function call(name,args=[],cb){
   setLoading(true);
   google.script.run.withFailureHandler(fail).withSuccessHandler(x=>{setLoading(false);cb&&cb(x)})[name](...args)
 }
-function render(data){state=data;$('#weekStart').value=data.weekStart;renderHabits();renderDays();renderBottom()}
+function render(data){state=data;$('#weekStartDisplay').textContent=formatDate(data.weekStart);closeDatePicker();renderHabits();renderDays();renderWeekProgress()}
 
 function renderHabits(){
   const d=state.days;
@@ -256,9 +324,7 @@ function renderHabits(){
     }).join('');
     return `<div class="habit-row"><div class="habit-name">${esc(h.name)}</div>${cells}<div class="hcell">${h.completed} / ${h.required}</div><button class="icon-btn danger" title="Удалить привычку" onclick="removeHabit('${h.id}','${esc(h.name)}')">×</button></div>`
   }).join('') : `<div class="habit-empty">Привычек пока нет. Добавьте первую.</div>`;
-  $('#habitRing').innerHTML=ring(state.habitProgress,'small')+`<div class="small-note">${state.habitCompleted} / ${state.habitRequired} выполнено</div>`;
-  $('#habitLegend').innerHTML=state.habits.map(h=>`<div class="legend-row"><span>${esc(h.name)}</span><b>${h.completed} / ${h.required}</b></div>`).join('')+
-    `<div class="legend-row" style="border-top:1px solid #ddd;padding-top:9px"><span>Всего</span><b>${state.habitCompleted} / ${state.habitRequired}</b></div>`
+  $('#habitSummary').innerHTML=`${state.habitCompleted} / ${state.habitRequired} выполнено · <b>${state.habitProgress}%</b>`
 }
 
 function renderDays(){
@@ -282,9 +348,20 @@ function renderDays(){
       <div class="count">${day.completed} / ${day.total}</div>
     </article>`).join('')
 }
-function renderBottom(){
-  $('#bars').innerHTML=state.days.map(d=>`<div class="bar-wrap"><div class="bar" style="height:${d.progress}%"></div><div class="bar-label">${d.short}<br>${formatDate(d.date,true)}</div></div>`).join('');
-  $('#weekRing').innerHTML=ring(state.weekProgress)+`<div class="small-note">${state.taskCompleted} / ${state.taskTotal} выполнено</div>`
+function renderWeekProgress(){
+  const maxTasks=Math.max(0,...state.days.map(day=>Math.max(0,Number(day.total)||0)));
+  const chartStep=maxTasks===0?0:(maxTasks<=6?1:5);
+  const chartMax=maxTasks===0?0:(maxTasks<=6?maxTasks:Math.ceil(maxTasks/5)*5);
+  const guides=[];
+  for(let value=chartStep;value&&value<=chartMax;value+=chartStep)guides.push(value);
+  const guideHtml=guides.map(value=>`<div class="chart-guide" style="bottom:${value/chartMax*100}%"><span>${value}</span></div>`).join('');
+  const barsHtml=state.days.map(day=>{
+    const completed=Math.max(0,Number(day.completed)||0);
+    const height=chartMax?Math.min(completed,chartMax)/chartMax*100:0;
+    return `<div class="bar-wrap"><div class="bar-slot"><div class="bar" title="${completed} выполнено из ${day.total}" style="height:${height}%"></div></div><div class="bar-label">${day.short}<br>${formatDate(day.date,true)}</div></div>`
+  }).join('');
+  $('#weekSummary').innerHTML=`${state.taskCompleted} / ${state.taskTotal} выполнено · <b>${state.weekProgress}%</b>`;
+  $('#weekChart').innerHTML=`<div class="chart-plot"><div class="chart-guides">${guideHtml}</div>${chartMax?'':'<div class="chart-empty">Задач пока нет</div>'}<div class="week-bars">${barsHtml}</div></div>`
 }
 
 function recalcTaskProgress(){
@@ -299,8 +376,8 @@ function recalcHabitProgress(){
 }
 function taskChanged(row,done){
   let target=null;for(const day of state.days){const t=day.tasks.find(x=>Number(x.row)===Number(row));if(t){target=t;break}}
-  if(!target)return;const prev=target.done;target.done=!!done;recalcTaskProgress();renderDays();renderBottom();
-  silentSave('toggleTask',[row,done],()=>{target.done=prev;recalcTaskProgress();renderDays();renderBottom()})
+  if(!target)return;const prev=target.done;target.done=!!done;recalcTaskProgress();renderDays();renderWeekProgress();
+  silentSave('toggleTask',[row,done],()=>{target.done=prev;recalcTaskProgress();renderDays();renderWeekProgress()})
 }
 function habitChanged(date,id,done){
   const habit=state.habits.find(h=>String(h.id)===String(id));const i=state.days.findIndex(d=>d.date===date);if(!habit||i<0)return;
@@ -366,7 +443,7 @@ function submitTask(){
   dayState.tasks.push(tempTask);
   recalcTaskProgress();
   renderDays();
-  renderBottom();
+  renderWeekProgress();
 
   backgroundCall('addTask',[state.weekStart,day,clean],result=>{
     const currentDay=state.days.find(d=>d.index+1===day);
@@ -385,7 +462,7 @@ function submitTask(){
       currentDay.tasks=currentDay.tasks.filter(t=>String(t.row)!==String(tempRow));
       recalcTaskProgress();
       renderDays();
-      renderBottom();
+      renderWeekProgress();
     }
     fail(err);
   });
@@ -429,13 +506,13 @@ function performDeleteTask(row){
   day.tasks.splice(idx,1);
   recalcTaskProgress();
   renderDays();
-  renderBottom();
+  renderWeekProgress();
 
   backgroundCall('deleteTask',[row],()=>{},err=>{
     day.tasks.splice(idx,0,task);
     recalcTaskProgress();
     renderDays();
-    renderBottom();
+    renderWeekProgress();
     fail(err);
   });
 }
@@ -587,9 +664,12 @@ function goCurrentWeek(){
   const iso=`${monday.getFullYear()}-${String(monday.getMonth()+1).padStart(2,'0')}-${String(monday.getDate()).padStart(2,'0')}`;
   call('setWeekStart',[iso],render)
 }
-$('#weekStart').addEventListener('change',e=>call('setWeekStart',[e.target.value],render));
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.week-picker-anchor'))closeDatePicker();
+});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
+    closeDatePicker();
     closeHabitModal();
     closeTaskModal();
     closeConfirmModal();
