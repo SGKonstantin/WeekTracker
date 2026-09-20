@@ -39,7 +39,7 @@ WeekTracker runs in a browser and can also be used from a mobile device.
 
 The primary end-user installation flow uses a Google Sheets template:
 
-[Create your own WeekTracker copy](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy)
+[Create your own WeekTracker copy](https://docs.google.com/spreadsheets/d/%31VUCRPaS2YDAHwKJ1ZimsA8JFEa0NT7oy55EV_Mmv__M/copy)
 
 This link opens Google's page for creating your personal copy of the template.
 
@@ -50,6 +50,18 @@ This link opens Google's page for creating your personal copy of the template.
 5. Afterwards, use **WeekTracker → Open application** from the Google Sheet menu.
 
 See the [detailed Russian installation guide](docs/INSTALLATION.md). English step-by-step documentation may be added later.
+
+## Versions
+
+Latest:
+
+- [v0.1.1 — create a copy](https://docs.google.com/spreadsheets/d/%31VUCRPaS2YDAHwKJ1ZimsA8JFEa0NT7oy55EV_Mmv__M/copy)
+
+Previous versions:
+
+- [v0.1.0 — create a copy](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy)
+
+Existing installations do not update automatically. User data remains in the existing copy; a safe upgrade mechanism between versions is planned separately.
 
 ## Usage
 

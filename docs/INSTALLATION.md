@@ -15,7 +15,9 @@ WeekTracker работает внутри вашей собственной ко
 
 ### Шаг 1. Создайте свою копию WeekTracker
 
-[Создать свою копию WeekTracker](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy)
+[Создать свою копию WeekTracker](https://docs.google.com/spreadsheets/d/%31VUCRPaS2YDAHwKJ1ZimsA8JFEa0NT7oy55EV_Mmv__M/copy)
+
+Инструкция относится к последней версии **v0.1.1**. [Шаблон v0.1.0](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy) остаётся доступен как предыдущая версия.
 
 Рекомендуемый способ:
 
@@ -119,6 +121,8 @@ Google может показать предупреждение **«Экспер
 ![WeekTracker готов](images/installation/14-open-weektracker-dialog.png)
 
 Готово. Установка завершена.
+
+> Существующая установка не обновляется автоматически: старая копия и её данные остаются без изменений. Для будущих обновлений планируется отдельный безопасный механизм.
 
 ## Как открывать WeekTracker потом
 

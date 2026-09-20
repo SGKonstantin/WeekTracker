@@ -1,4 +1,4 @@
-const WEEKTRACKER_VERSION = '0.1.0';
+const WEEKTRACKER_VERSION = '0.1.1';
 
 function doGet() {
   registerWeekTrackerWebAppUrl_();
