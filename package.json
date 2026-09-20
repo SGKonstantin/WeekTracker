@@ -1,6 +1,6 @@
 {
   "name": "week-tracker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A lightweight weekly planner and habit tracker built with Google Apps Script and Google Sheets",
   "scripts": {
     "test": "vitest run",

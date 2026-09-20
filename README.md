@@ -9,7 +9,7 @@
 
 WeekTracker объединяет недельный план, задачи, привычки и прогресс в Google Apps Script Web App. Отдельный сервер не нужен: приложение и данные находятся в собственной копии Google Sheets пользователя.
 
-### [🚀 Создать свою копию WeekTracker](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy)
+### [🚀 Создать свою копию WeekTracker](https://docs.google.com/spreadsheets/d/%31VUCRPaS2YDAHwKJ1ZimsA8JFEa0NT7oy55EV_Mmv__M/copy)
 
 ### [📖 Инструкция по установке](docs/INSTALLATION.md)
 
@@ -49,13 +49,25 @@ WeekTracker открывается в мобильном браузере и н�
 
 ## 🚀 Быстрый старт
 
-1. [Создайте личную копию WeekTracker](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy).
+1. [Создайте личную копию WeekTracker](https://docs.google.com/spreadsheets/d/%31VUCRPaS2YDAHwKJ1ZimsA8JFEa0NT7oy55EV_Mmv__M/copy).
 2. Выполните **WeekTracker → Первоначальная настройка**.
 3. Разверните Apps Script как Web App.
 4. Один раз откройте полученный Web App URL.
 5. В дальнейшем используйте **WeekTracker → Открыть приложение** в своей таблице.
 
 Полный путь со скриншотами: [подробная инструкция по установке](docs/INSTALLATION.md).
+
+## Версии
+
+Последняя версия:
+
+- [v0.1.1 — создать копию](https://docs.google.com/spreadsheets/d/%31VUCRPaS2YDAHwKJ1ZimsA8JFEa0NT7oy55EV_Mmv__M/copy)
+
+Предыдущие версии:
+
+- [v0.1.0 — создать копию](https://docs.google.com/spreadsheets/d/%317T7ZwIzmjOS9dhjkvPIkf44EyPINVzOCXXwXz6E1wIs/copy)
+
+Существующие установки автоматически не обновляются. Пользовательские данные остаются в существующей копии; безопасный механизм обновления между версиями планируется отдельно.
 
 ## 🔐 Данные и приватность
 
